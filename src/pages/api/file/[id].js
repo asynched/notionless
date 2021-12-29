@@ -1,3 +1,8 @@
+/**
+ *
+ * @param { import('next').NextApiRequest } request
+ * @param { import('next').NextApiResponse } response
+ */
 export default function handler(request, response) {
   response.status(200).json({
     time: 1640744134067,
