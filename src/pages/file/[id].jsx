@@ -1,38 +1,55 @@
 import { useEffect, useState } from 'react'
+import { DocumentIcon } from '@heroicons/react/outline'
 
-import { getFile } from '@services/http/files'
+import Logger from '@utils/logger'
+import { getFile, getFiles } from '@services/http/files'
 
 import Editor from '@components/Editor'
-import Logger from '@utils/logger'
+import styles from '@styles/File.module.scss'
 
-export default function Home({ data }) {
+export default function Home({ files, data }) {
   /** @type { [import('@editorjs/editorjs').default, (state: any) => void] } */
   const [editor, setEditor] = useState(null)
-
-  const handleSave = async () => {
-    const data = await editor.save()
-    Logger.info(data)
-  }
+  const [activeFile, setActiveFile] = useState(0)
 
   useEffect(() => {
-    console.log(editor)
+    Logger.info(editor)
   }, [editor])
 
   return (
-    <main>
-      <h1>Editor</h1>
-      <button onClick={handleSave}>Save</button>
-      <Editor data={data} editorSetter={setEditor} />
+    <main className={styles.mainContainer}>
+      <div className={styles.fileSidebar}>
+        <div className={styles.searchContainer}>
+          <input type="text" placeholder="Search" />
+        </div>
+        <ul>
+          {files.map((file, index) => (
+            <li
+              key={file}
+              className={index === activeFile ? styles.active : ''}
+              onClick={() => setActiveFile(index)}
+            >
+              <DocumentIcon />
+              {file}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div className={styles.editorContainer}>
+        <h1>Editor</h1>
+        <Editor data={data} editorSetter={setEditor} />
+      </div>
     </main>
   )
 }
 
 export async function getServerSideProps() {
-  const data = await getFile('1')
+  const [data, files] = await Promise.all([getFile('1'), getFiles()])
 
   return {
     props: {
       data,
+      files,
     },
   }
 }
