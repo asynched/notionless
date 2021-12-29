@@ -1,4 +1,4 @@
-export default function makeEditorRenderer(stateSetter) {
+export function makeEditorRenderer(stateSetter) {
   return async (data) => {
     const { default: EditorJS } = await import('@editorjs/editorjs')
     const { default: Header } = await import('@editorjs/header')
