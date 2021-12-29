@@ -1,0 +1,17 @@
+.fileSidebar {
+  padding: 1rem;
+  width: 16rem;
+  border-right: 1px solid var(--border);
+
+  div.searchContainer {
+    background: var(--border);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+
+    input {
+      border: none;
+      outline: none;
+      background: inherit;
+    }
+  }
+}

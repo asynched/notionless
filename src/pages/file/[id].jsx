@@ -1,47 +1,39 @@
-import { useEffect, useState } from 'react'
-import { DocumentIcon } from '@heroicons/react/outline'
+import { useContext, useEffect, useState } from 'react'
 
-import Logger from '@utils/logger'
+import { liftContext } from '@lib/functional'
 import { getFile, getFiles } from '@services/http/files'
 
+import EditorContextProvider, { EditorContext } from '@contexts/EditorContext'
 import Editor from '@components/Editor'
+import FileSidebar from '@components/FileSidebar'
+
 import styles from '@styles/File.module.scss'
 
-export default function Home({ files, data }) {
+export default liftContext(EditorContextProvider, ({ files, data }) => {
   /** @type { [import('@editorjs/editorjs').default, (state: any) => void] } */
   const [editor, setEditor] = useState(null)
-  const [activeFile, setActiveFile] = useState(0)
+  const { dispatch } = useContext(EditorContext)
 
   useEffect(() => {
-    Logger.info(editor)
-  }, [editor])
+    dispatch({
+      type: 'SET_STATE',
+      payload: {
+        activeFile: 0,
+        files,
+      },
+    })
+  }, [files, dispatch])
 
   return (
     <main className={styles.mainContainer}>
-      <div className={styles.fileSidebar}>
-        <div className={styles.searchContainer}>
-          <input type="text" placeholder="Search" />
-        </div>
-        <ul>
-          {files.map((file, index) => (
-            <li
-              key={file}
-              className={index === activeFile ? styles.active : ''}
-              onClick={() => setActiveFile(index)}
-            >
-              <DocumentIcon />
-              {file}
-            </li>
-          ))}
-        </ul>
-      </div>
+      <FileSidebar />
       <div className={styles.editorContainer}>
         <h1>Editor</h1>
         <Editor data={data} editorSetter={setEditor} />
       </div>
     </main>
   )
-}
+})
 
 export async function getServerSideProps() {
   const [data, files] = await Promise.all([getFile('1'), getFiles()])
