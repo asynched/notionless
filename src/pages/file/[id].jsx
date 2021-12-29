@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import { getFile } from '../../services/files'
+import { getFile } from '@services/http/files'
 
-import Editor from '../components/Editor'
-import Logger from '../../utils/logger'
+import Editor from '@components/Editor'
+import Logger from '@utils/logger'
 
 export default function Home({ data }) {
   /** @type { [import('@editorjs/editorjs').default, (state: any) => void] } */

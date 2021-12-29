@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import makeEditorRenderer from '../../lib/editor'
+import makeEditorRenderer from '@lib/editor'
 
 export default function Editor({ editorSetter, data }) {
   useEffect(() => {
